@@ -1,0 +1,2 @@
+# xinmeng-Web-Assistant
+新盟网页助手-这是一个增强网页功能的Tampermonkey脚本，主要用于控制视频播放速度和下载视频以及解除学习通复制粘贴限制。
