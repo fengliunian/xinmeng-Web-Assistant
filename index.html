@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新盟网页助手 - 视频控制与下载工具</title>
+    <style>
+        /* 更新基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00BCD4;
+            --secondary: #607D8B;
+            --accent: #2196F3;
+            --background: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text: #37474F;
+            --text-light: #78909C;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        /* 更新头部样式 */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></svg>') center/50px repeat;
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        /* 更新卡片样式 */
+        .feature-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        /* 添加技术原理部分样式 */
+        .principles {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .principles h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .principle-item {
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .principle-item h3 {
+            color: var(--text);
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .principle-item h3::before {
+            content: '⚡';
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .principle-item p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h3 {
+            color: #2196F3;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .feature-card p {
+            color: #666;
+        }
+
+        .installation {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .installation h2 {
+            color: #2196F3;
+            margin-bottom: 20px;
+        }
+
+        .installation ol {
+            padding-left: 20px;
+        }
+
+        .installation li {
+            margin-bottom: 10px;
+        }
+
+        .usage {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .usage h2 {
+            color: #2196F3;
+            margin-bottom: 20px;
+        }
+
+        .usage ul {
+            list-style: none;
+        }
+
+        .usage li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .usage li::before {
+            content: "•";
+            color: #2196F3;
+            position: absolute;
+            left: 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            margin-top: 40px;
+        }
+
+        /* 更新日志样式优化 */
+        .changelog {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .changelog h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .changelog h2 .latest-version {
+            font-size: 0.6em;
+            background: var(--accent);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: normal;
+        }
+
+        .version-list {
+            max-height: none;
+            overflow: visible;
+        }
+
+        .version-list::after {
+            display: none;
+        }
+
+        .version-controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .version-control-btn {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .version-control-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .version-control-btn .arrow-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .version-control-btn.expanded .arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 添加展开/收起动画 */
+        .version-list {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* 添加版本切换动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .version-item {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 添加新版本项的动画 */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .version-item.new {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        /* 添加首次发布标签样式 */
+        .tag-feature[data-type="first-release"] {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        /* 添加滚动进度指示器 */
+        .scroll-indicator {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 4px;
+            height: 0;
+            background: var(--accent);
+            opacity: 0.5;
+            transition: height 0.3s;
+        }
+
+        /* 更新日志相关样式 */
+        .version-list.hidden {
+            display: none;
+        }
+
+        .version-controls {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .version-control-btn {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .version-control-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .version-control-btn .arrow-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .version-control-btn.expanded .arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 添加展开/收起动画 */
+        .version-list {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* 添加版本切换动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .version-item {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 更新版本项的样式 */
+        .version-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .version-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .version-item h3 {
+            color: var(--text);
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .version-item .date {
+            font-size: 0.85em;
+            color: var(--text-light);
+            background: rgba(0,0,0,0.05);
+            padding: 4px 10px;
+            border-radius: 15px;
+        }
+
+        .version-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .version-tag {
+            font-size: 0.75em;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .tag-feature {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .tag-improvement {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        .tag-fix {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .version-item .changes {
+            list-style: none;
+            padding: 0;
+        }
+
+        .version-item .changes li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text);
+        }
+
+        .version-item .changes li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* 为不同类型更新添加不同的边框颜色 */
+        .version-item[data-type="feature"] {
+            border-left-color: #1976D2;
+        }
+
+        .version-item[data-type="improvement"] {
+            border-left-color: #388E3C;
+        }
+
+        .version-item[data-type="fix"] {
+            border-left-color: #D32F2F;
+        }
+
+        /* 最���版本特殊样式 */
+        .version-item:first-child {
+            background: linear-gradient(to right, rgba(33, 150, 243, 0.05), transparent);
+            border-left-color: #2196F3;
+        }
+
+        /* 版本之间的分隔线 */
+        .version-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 25px;
+            right: 25px;
+            height: 1px;
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* 优化按钮样式 */
+        .version-control-btn {
+            margin-top: 20px;
+            background: white;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .version-control-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 联系方式样式 */
+        .contact {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .contact h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 25px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .contact-item h3 {
+            color: var(--text);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .contact-item p {
+            color: var(--text-light);
+            margin: 10px 0;
+        }
+
+        .qr-code {
+            margin: 20px auto;
+            width: 150px;
+            height: 150px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .qr-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .contact-item a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* 添加模块标题样式 */
+        .section-title {
+            font-size: 2.2em;
+            color: var(--text);
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        /* 优化模块样式 */
+        .feature-card,
+        .changelog,
+        .installation,
+        .usage,
+        .principles,
+        .contact {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 添加模块悬停效果 */
+        .feature-card:hover,
+        .changelog:hover,
+        .installation:hover,
+        .usage:hover,
+        .principles:hover,
+        .contact:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        /* 添加模块装饰元素 */
+        .section-decorator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        /* 优化内容区域内边距 */
+        .feature-card,
+        .changelog,
+        .installation,
+        .usage,
+        .principles,
+        .contact {
+            padding: 40px;
+        }
+
+        /* 添加模块标识色 */
+        .feature-card { border-top: 4px solid var(--primary); }
+        .changelog { border-top: 4px solid var(--accent); }
+        .installation { border-top: 4px solid #4CAF50; }
+        .usage { border-top: 4px solid #FF5722; }
+        .principles { border-top: 4px solid #9C27B0; }
+        .contact { border-top: 4px solid #FF9800; }
+
+        /* 优化列表样式 */
+        .usage ul,
+        .installation ol {
+            background: rgba(0,0,0,0.02);
+            padding: 20px 40px;
+            border-radius: 10px;
+        }
+
+        /* 化技术原理样式 */
+        .principle-item {
+            background: rgba(0,0,0,0.02);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* 优化联系方式卡片样式 */
+        .contact-item {
+            background: rgba(0,0,0,0.02);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        /* 添加响应式间距 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 15px;
+            }
+
+            .feature-card,
+            .changelog,
+            .installation,
+            .usage,
+            .principles,
+            .contact {
+                padding: 25px;
+                margin-bottom: 30px;
+            }
+        }
+
+        /* 更新按钮容器样式 */
+        .update-check {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        /* 更新按钮样式 */
+        .update-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .update-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .update-icon {
+            font-size: 16px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .update-btn:hover .update-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 适配移动端 */
+        @media (max-width: 768px) {
+            .update-check {
+                top: 10px;
+                right: 10px;
+            }
+
+            .update-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        .usage .sub-list {
+            margin-top: 5px;
+            margin-left: 20px;
+            list-style-type: none;
+            background: rgba(0,0,0,0.02);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .usage .sub-list li {
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        .usage .sub-list li::before {
+            content: "•";
+            color: var(--accent);
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="update-check">
+            <button class="update-btn" onclick="window.open('http://113.44.209.113:9002/', '_blank')">
+                <span class="update-icon">↻</span>
+                检查更新
+            </button>
+        </div>
+        <h1>新盟网页助手</h1>
+        <p>强大的视频控制与下载工具</p>
+    </div>
+
+    <div class="container">
+        <div class="features">
+            <div class="feature-card">
+                <h3>视频倍速控制</h3>
+                <p>支持自定义视频播放速度，从0.5x到3.0x不等，让您以最适合的速度观看视频。点击"视频倍速"按钮即可调整。</p>
+            </div>
+            <div class="feature-card">
+                <h3>视频下载功能</h3>
+                <p>一键下载网页中的视频内容，支持多种下载方式。对无法直接下载的视频，提供录制功能作为备选方案。</p>
+            </div>
+            <div class="feature-card">
+                <h3>解除复制限制</h3>
+                <p>动解除网页的复制粘贴限制，让您能够自由地复制和粘贴文本容提高工作效率。</p>
+            </div>
+        </div>
+
+        <div class="changelog">
+            <h2>
+                更新日志
+                <span class="latest-version">最新版本: v1.2.6</span>
+            </h2>
+            <div class="version-list" id="versionList">
+                <div class="version-item">
+                    <h3>v1.2.6 <span class="date">2024-12-20</span></h3>
+                    <div class="version-tags">
+                        <span class="version-tag tag-feature">新功能</span>
+                        <span class="version-tag tag-improvement">优化</span>
+                    </div>
+                    <ul class="changes">
+                        <li>添加快捷键自定义设置功能</li>
+                        <li>优化面板显示方式，添加迷你模式</li>
+                        <li>改进控制面板交互体验</li>
+                    </ul>
+                </div>
+
+                <div class="version-item">
+                    <h3>v1.2.5 <span class="date">2024-12-15</span></h3>
+                    <div class="version-tags">
+                        <span class="version-tag tag-improvement">优化</span>
+                        <span class="version-tag tag-fix">修复</span>
+                    </div>
+                    <ul class="changes">
+                        <li>优化解除粘贴限制功能，改为双按钮控制</li>
+                        <li>修复在某些网站无法正确解除限制的问题</li>
+                        <li>改进功能稳定性</li>
+                    </ul>
+                </div>
+
+                <div class="version-item">
+                    <h3>v1.2.4 <span class="date">2024-12-10</span></h3>
+                    <div class="version-tags">
+                        <span class="version-tag tag-improvement">优化</span>
+                    </div>
+                    <ul class="changes">
+                        <li>改进粘贴限制解除方式，使用禁用JavaScript方案</li>
+                        <li>提升解除限制的兼容性</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 查看更多按钮 -->
+            <div class="version-controls">
+                <button class="version-control-btn" id="toggleVersions">
+                    查看更多版本
+                    <span class="arrow-icon">▼</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="installation">
+            <h2>安装说明</h2>
+            <ol>
+                <li>首先安装油猴插件（Tampermonkey）</li>
+                <li>点击安装新盟网页助手脚本</li>
+                <li>刷新网页可使用</li>
+            </ol>
+        </div>
+
+        <div class="usage">
+            <h2>用说明</h2>
+            <ul>
+                <li><strong>控制面板：</strong>页面右侧会显示一个⚙️齿轮图标，点击可展开完整控制面板</li>
+                <li><strong>视频倍速：</strong>在控制面板中使用"+""-"按钮调节播放速度</li>
+                <li><strong>下载视频：</strong>点击"下载视频"按钮，选择下载方式</li>
+                <li><strong>解除限制：</strong>点击"限制已解除"按钮，自动解除页面限制</li>
+                <li><strong>面板拖动：</strong>可以拖动控制面板和迷你按钮到任意位置</li>
+                <li><strong>快捷键：</strong>
+                    <ul class="sub-list">
+                        <li>[ : 减速播放</li>
+                        <li>] : 加速播放</li>
+                        <li>\ : 重置播放速度</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="principles">
+            <h2>技术原理</h2>
+            <div class="principle-item">
+                <h3>视频控制原理</h3>
+                <p>通过HTML5 Video API接口直接操作视频元素的playbackRate属性，实现精确的播放速度控制。使用MutationObserver监听动态加载的视频元素，确保对所有视频都能实现控制。</p>
+            </div>
+            <div class="principle-item">
+                <h3>视频下载实现</h3>
+                <p>采用多级下载策略：优先尝试获取视频源地址直接下载，当遇到加密或流媒体时，使用MediaRecorder API录制屏幕内容。通过Blob API和URL.createObjectURL实现数据流的保存和下载。</p>
+            </div>
+            <div class="principle-item">
+                <h3>复制限制解除</h3>
+                <p>通过JavaScript动态修改DOM元素事件监听器和CSS属性，移除网站对复制操作的限制同时使用MutationObserver确保在动态内容加载时也能保持解除限制的状态。</p>
+            </div>
+            <div class="principle-item">
+                <h3>拖拽实现原理</h3>
+                <p>基于HTML5 Drag and Drop API，结合自定义的事件处理系统，实现控制面板的自由拖动。使用CSS transform属性进行位置计算，确保流畅的拖动体验和准确的位置记录。</p>
+            </div>
+        </div>
+
+        <div class="contact">
+            <h2>联系我们</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>QQ交流群</h3>
+                    <p>群号：488752620</p>
+                    <p><a href="https://qm.qq.com/q/FGnbXPpP0G" target="_blank">点击加入QQ群</a></p>
+                    <div class="qr-code">
+                        <!-- 这里可以放QQ群二维码图片 -->
+                        <img src="path/to/qq-qr-code.png" alt="QQ群二维码" class="qr-image">
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <h3>微信交流群</h3>
+                    <p>扫码加入微信群</p>
+                    <div class="qr-code">
+                        <!-- 这里可以放微信群二维码图片 -->
+                        <img src="path/to/wechat-qr-code.png" alt="微信群二维码" class="qr-image">
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <h3>问题反馈</h3>
+                    <p>邮箱：3171907850@qq.com</p>
+                    <p>GitHub：<a href="https://github.com/your-repo" target="_blank">项目地址</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 新盟网页助手 版权所有</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggleVersions');
+            const versionList = document.getElementById('versionList');
+            let isExpanded = false;
+            
+            // 历史版本数据
+            const historicalVersions = [
+                {
+                    version: 'v1.2.3',
+                    date: '2024-12-05',
+                    tags: [{ type: 'feature', text: '新功能' }],
+                    changes: [
+                        '添加解除粘贴限制功能',
+                        '新增快捷键支持'
+                    ]
+                },
+                {
+                    version: 'v1.2.2',
+                    date: '2024-11-28',
+                    tags: [{ type: 'feature', text: '新功能' }],
+                    changes: [
+                        '添加下载方式选择功能',
+                        '新增录制界面拖动功能',
+                        '优化下载体验'
+                    ]
+                },
+                {
+                    version: 'v1.2.1',
+                    date: '2024-11-25',
+                    tags: [{ type: 'improvement', text: '优化' }],
+                    changes: [
+                        '优化视频录制功能',
+                        '支持自定义录制时长'
+                    ]
+                },
+                {
+                    version: 'v1.2.0',
+                    date: '2024-11-20',
+                    tags: [{ type: 'feature', text: '新功能' }],
+                    changes: [
+                        '添加视频下载功能',
+                        '支持多种下载方式'
+                    ]
+                },
+                {
+                    version: 'v1.1.0',
+                    date: '2024-11-15',
+                    tags: [
+                        { type: 'feature', text: '新功能' },
+                        { type: 'improvement', text: '优化' }
+                    ],
+                    changes: [
+                        '添加可视化控制面板',
+                        '支持面板拖动功能',
+                        '优化用户界面交互'
+                    ]
+                },
+                {
+                    version: 'v1.0.0',
+                    date: '2024-11-10',
+                    tags: [{ type: 'feature', text: '首次发布', isFirstRelease: true }],
+                    changes: [
+                        '支持视频播放速度控制',
+                        '支持快捷键操作',
+                        '基础功能实现'
+                    ]
+                }
+            ];
+
+            toggleBtn.addEventListener('click', function() {
+                if (!isExpanded) {
+                    // 添加历史版本
+                    historicalVersions.forEach(version => {
+                        const versionElement = createVersionElement(version);
+                        versionList.appendChild(versionElement);
+                    });
+                    
+                    this.innerHTML = '收起更新历史 <span class="arrow-icon">▼</span>';
+                    this.classList.add('expanded');
+                    isExpanded = true;
+                } else {
+                    // 移除历史版本
+                    const historicalElements = versionList.querySelectorAll('.version-item.historical');
+                    historicalElements.forEach(el => el.remove());
+                    
+                    this.innerHTML = '查看更多版本 <span class="arrow-icon">▼</span>';
+                    this.classList.remove('expanded');
+                    isExpanded = false;
+
+                    // 滚动到更新日志部
+                    document.querySelector('.changelog').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+
+            // 创建版本元素的辅助函数
+            function createVersionElement(versionData) {
+                const versionElement = document.createElement('div');
+                // 根据标签类型设置主要类型
+                const mainType = versionData.tags[0].type;
+                versionElement.className = 'version-item historical new';
+                versionElement.setAttribute('data-type', mainType);
+                
+                let tagsHTML = versionData.tags.map(tag => {
+                    const className = tag.isFirstRelease ? 
+                        'version-tag tag-feature" data-type="first-release' : 
+                        `version-tag tag-${tag.type}`;
+                    return `<span class="${className}">${tag.text}</span>`;
+                }).join('');
+
+                let changesHTML = versionData.changes.map(change => 
+                    `<li>${change}</li>`
+                ).join('');
+
+                versionElement.innerHTML = `
+                    <h3>
+                        ${versionData.version}
+                        <span class="date">${versionData.date}</span>
+                    </h3>
+                    <div class="version-tags">
+                        ${tagsHTML}
+                    </div>
+                    <ul class="changes">
+                        ${changesHTML}
+                    </ul>
+                `;
+
+                return versionElement;
+            }
+
+            // 为版本标签添加悬停效果
+            document.querySelectorAll('.version-tag').forEach(tag => {
+                tag.addEventListener('mouseover', function() {
+                    this.style.transform = 'scale(1.1)';
+                });
+                tag.addEventListener('mouseout', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
